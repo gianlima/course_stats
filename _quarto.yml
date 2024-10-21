@@ -6,7 +6,7 @@ website:
     style: "docked"
     search: true
     contents:
-      - text: "Introduction"
+      - text: "Título"
         href: index.qmd
 
 
