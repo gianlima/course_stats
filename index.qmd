@@ -1,19 +1,11 @@
 ---
-title: "About Me"
-about:
-  id: me
-  template: broadside
-  image: img/profile.png
+title: "eee"
 ---
 
-:::{#me}
+This is a Quarto website.
 
-## Goals
+To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
-## Education
-
-## Experience
-
-:::
-
-Thanks for checking out my web site!
+```{r}
+1 + 1
+```
