@@ -1,10 +1,8 @@
 ---
-title: "eee"
+title: "Analyses quantitatives dans le domaine des ressources renouvelables"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+UNIVERSITÉ OI TUDO BEM DU QUÉBEC À CHICOUTIMI DÉPARTEMENT DES SCIENCES FONDAMENTALES
 
 ```{r}
 1 + 1
