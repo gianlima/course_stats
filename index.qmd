@@ -2,7 +2,7 @@
 title: "Analyses quantitatives dans le domaine des ressources renouvelables"
 ---
 
-UNIVERSITÉ OI TUDO BEM DU QUÉBEC À CHICOUTIMI DÉPARTEMENT DES SCIENCES FONDAMENTALES
+vendo se foi
 
 ```{r}
 1 + 1
