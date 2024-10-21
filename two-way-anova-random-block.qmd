@@ -1,0 +1,165 @@
+---
+title: "ANOVA with random blocks"
+format: 
+  html:
+    toc: true
+    page-layout: full
+    toc-depth: 4
+    toc-location: left          
+editor: visual
+---
+
+ANOVA with random blocks is a statistical technique used to analyze data where the experimental units are grouped into blocks, and these **blocks are considered random effects**. The main goal is to **account for variability due to the blocks** (which could be differences between groups or environments) and **test the significance of the fixed effects** (e.g., treatments) while recognizing that blocks contribute random variation.
+
+This type of design is commonly referred to as a **Randomized Block Design (RBD)** with random blocks.
+
+#### Key Concepts
+
+1.  **Fixed Effects**: These are the factors or treatments you are primarily interested in studying. For example, if you're testing the effect of fertilizers on crop yield, the different types of fertilizers would be your fixed effect.
+
+2.  **Random Effects (Blocks)**: These represent groups or experimental units that you want to control for. In a randomized block design, each block can represent something like a different field, batch, location, or time period, which could introduce variability. Blocks are assumed to be random samples from a larger population.
+
+3.  **Why Use Random Blocks**: Random blocks help account for variability in the response variable that is due to differences between blocks, which you are not directly interested in. By including random blocks in the model, you reduce the noise from these sources of variation and increase the precision of your estimates for the fixed effects (treatments).
+
+::: callout-note
+**Data we'll use:** `walter.csv`, boîte 10.1 p.264
+:::
+
+#### Box 10.1 Worked example of randomized complete block analysis: mites on leaves
+
+Walter & O'Dowd (1992) examined the role of domatia (small shelters at the juncture of veins on leaves) in determining the numbers of **mites** on leaves of plant species with domatia. They did an experiment using 14 pairs of leaves (randomly chosen) with one leaf in each pair with shaved domatia and the other as a control (normal domatia).
+
+```{r}
+# get thedata
+df <- read.csv("data/walter.csv")
+```
+
+```{r}
+# view the data
+DT::datatable(df)
+```
+
+\
+
+The response variable was total **number of mites per leaf**, which Walter & O'Dowd (1992) transformed to $log_e(0.5+(mite \times 10))$, ostensibly to **improve normality and homogeneity of variances between treatments**, the 0.5 added because of zeros although multiplication by ten seemed unnecessary. The data were analyzed using model 10.1, **the factors being block** (`BLOCK`) and treatment (`TREAT`) and the response variable (`LMITE`) being $log_e(0.5+(mite \times 10))$.
+
+`MITE` is already transformed as `LMITE`. However, if we wanted to do it in R, we would have done:
+
+```{r}
+# base "e"
+log(0.5+(df$MITE*10))
+```
+
+::: callout-note
+If we used `log10()`, the result would be wrong, because it has base 10.
+:::
+
+#### Make sure the variables are factors
+
+```{r}
+df$BLOCK <- as.factor(df$BLOCK)
+df$TREAT <- as.factor(df$TREAT)
+```
+
+#### ANOVA with random blocks
+
+The table presented in the book:
+
+| Source            | SS     | df  | MS     | F      | P     |
+|-------------------|--------|-----|--------|--------|-------|
+| Treatment         | 31.341 | 1   | 31.341 | 11.315 | 0.005 |
+| Block (leaf pair) | 23.058 | 13  | 1.774  | 0.640  | 0.784 |
+| Residual          | 36.007 | 13  | 2.770  |        |       |
+
+**Let's get it in R!**
+
+We'll use the function `anovaMM()` from the package `VCA`. For this function, all the random terms need to be enclosed by round brackets `()`.
+
+```{r message = F, warning = F}
+library(VCA)
+model <- anovaMM(LMITE ~ TREAT + (BLOCK), Data = df)
+model
+```
+
+#### Interpretation
+
+This output presents the results of an **ANOVA-type estimation** of a mixed-effects model, with both fixed effects and random effects (variance components). Here's a breakdown of the key components of the result:
+
+#### 1. **Fixed Effects**
+
+The first part of the output shows the estimates of the **fixed effects**, which include the intercept and the treatment levels (`TREAT`):
+
+| Parameter | Estimate |
+|-----------|----------|
+| Intercept | 1.673514 |
+| TREAT1    | 2.115949 |
+| TREAT2    | 0.000000 |
+
+-   **Intercept (1.673514)**: This is the estimated mean response when the treatment level is at the baseline (reference category).
+
+-   **TREAT1 (2.115949)**: This is the estimated difference in response between the baseline treatment and `TREAT1`. It means that `TREAT1` is associated with an increase of 2.115949 units compared to the baseline.
+
+-   **TREAT2 (0.000000)**: This indicates that `TREAT2` is the baseline treatment, hence the estimate is 0.
+
+#### 2. **Variance Components**
+
+The second part lists the **variance components**, which describe the variability in the model, including the total variance, block variance, and residual (error) variance.
+
+| Component | DF  | SS        | MS       | VC       | %Total | SD       | CV\[%\]   |
+|-----------|-----|-----------|----------|----------|--------|----------|-----------|
+| total     | 26  |           |          | 2.769788 | 100    | 1.664268 | 60.928984 |
+| BLOCK     | 13  | 23.057582 | 1.77366  | 0\*      | 0\*    | 0\*      | 0\*       |
+| error     | 13  | 36.007247 | 2.769788 | 2.769788 | 100    | 1.664268 | 60.928984 |
+
+#### Definitions:
+
+-   **DF (Degrees of Freedom)**: Indicates how much information is available to estimate the variance. Here, 13 degrees of freedom are associated with `BLOCK` and 13 with the residual (error).
+
+-   **SS (Sum of Squares)**: Reflects the total variability explained by each component. The larger the sum of squares, the more variability the component accounts for.
+
+-   **MS (Mean Squares)**: The mean of the squares (SS divided by DF). This is used to assess the contribution of each component.
+
+-   **VC (Variance Component)**: Represents the estimated variance attributed to each component.
+
+    -   For **BLOCK**, the variance component is set to **0** (\* VC set to 0). This means that the model found no significant variance attributable to the blocks, which can happen when there is no substantial variability between blocks.
+
+    -   For **error**, the variance component is **2.769788**, representing the residual variance (unexplained variation).
+
+-   **%Total**: The percentage of total variance explained by each component. In this case, all the variance (100%) is attributed to the residual error, and none is attributed to `BLOCK`.
+
+-   **SD (Standard Deviation)**: The square root of the variance component. This provides the estimated standard deviation for each variance component.
+
+-   **CV\[%\] (Coefficient of Variation)**: The ratio of the standard deviation to the mean, expressed as a percentage. This measures the relative variability.
+
+#### 3. **Other Metrics**
+
+-   **Mean**: The overall mean response in the dataset is **2.731488**, based on 28 observations (N = 28).
+
+-   **Experimental Design: balanced**: Indicates that the design is balanced, meaning each treatment is equally represented across the blocks.
+
+-   **Method: ANOVA**: The estimation method used is ANOVA.
+
+-   **VC set to 0**: The variance component for `BLOCK` was set to 0, indicating that the random block effect was found to be negligible.
+
+#### Interpretation:
+
+-   **Fixed Effects**: The treatment effect (`TREAT1`) is estimated to increase the response by 2.115949 units compared to the baseline (`TREAT2`), which is set to 0.
+
+-   **Variance Components**: The random effect of `BLOCK` has a variance component of 0, meaning that `BLOCK` does not explain any additional variability in the model. The residual variance (error) is the only contributor to the total variability in the model.
+
+-   **Design**: The model assumes a balanced design, and the analysis method used is ANOVA.
+
+In summary, this output suggests that the block structure does not contribute significantly to the variability in the response, and the treatment effects are the primary source of systematic variation. All the variability in the model is attributed to the residual error.
+
+#### Another function
+
+We can also use the function `lmer()` from the package `lme4` and obtain more results.
+
+```{r message = F, warning = F}
+library(lme4)
+library(lmerTest)
+model <- lmer(LMITE ~ TREAT + (1|BLOCK), data = df, REML=F)
+model
+anova(model)
+summary(model)
+```

@@ -1,0 +1,418 @@
+---
+title: "Régression multiple lineaire (6.1, 6.2)"
+format: 
+  html:
+    toc: true
+    page-layout: full
+    toc-depth: 4
+    toc-location: left          
+editor: visual
+---
+
+L'équation de régression multiple peut être écrite comme suit :
+
+$$
+Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \ldots + \beta_nX_n + \epsilon
+$$
+
+Où :
+
+-   $Y$ est la variable dépendante (le résultat que vous prédisez),
+-   $\beta_0$ est l'interception (la valeur de $Y$ lorsque toutes les variables $X$ sont égales à 0),
+-   $\beta_1, \beta_2, \ldots, \beta_n$ sont les coefficients des variables indépendantes,
+-   $X_1, X_2, \ldots, X_n$ sont les variables indépendantes,
+-   $\epsilon$ est le terme d'erreur (la différence entre les valeurs réelles et prédites).
+
+We'll be using the dataset `paruelo.csv (chap 6)`, boîte 6.1 p. 112.
+
+**Box 6.1 Worked example of multiple linear regression: relative abundance of plant functional types**
+
+#### Data
+
+Paruelo & Lauenroth (1996) analyzed the geographic distribution and the effects of climate variables on the relative abundance of a number of plant functional types (PFTs) including shrubs, forbs, succulents (e.g. cacti), $C_3$ grasses and $C_4$ grasses. There were 73 sites across North America. The variables of interest are the relative abundance of $C_3$ plants, the latitude in centesimal degrees (LAT), the longitude in centesimal degrees (LONG), the mean annual precipitation in mm (MAP), the mean annual temperature in $°C$ (MAT), the proportion of MAP that fell in June, July and August (JJAMAP) and the proportion of MAP that fell in December, January and February (DJFMAP).
+
+```{r}
+# get thedata
+df <- read.csv("data/paruelo.csv")
+```
+
+```{r}
+DT::datatable(df)
+```
+
+#### Distribution of C3
+
+```{r}
+hist(df$C3)
+```
+
+The relative abundance of $C_3$ plants was positively skewed and transformed to $log_{10} + 0.1$ ($log_{10}C_3$). A correlation matrix between the predictor variables indicated that some predictors are strongly correlated.
+
+The transformation is seen in the column `LC3`.
+
+If not, we could have transformed this way in R.
+
+```{r}
+log10(df$C3 + 0.1)
+```
+
+#### Distribution of LC3 (Y variable)
+
+```{r}
+hist(df$LC3)
+```
+
+#### Correlation matrix (plot) between the predictors
+
+```{r warning = F, message = F}
+library("PerformanceAnalytics")
+chart.Correlation(df[,3:8], histogram=TRUE, pch=19)
+```
+
+#### Correlation matrix between the predictors
+
+```{r}
+cor(df[,c("LAT","LONG","MAP","MAT","JJAMAP","DJFMAP")])
+```
+
+A correlation matrix between the predictor variables indicated that some predictors are **strongly correlated**.
+
+|        |        |        |        |        |        |        |
+|--------|--------|--------|--------|--------|--------|--------|
+|        | LAT    | LONG   | MAP    | MAT    | JJAMAP | DJFMAP |
+| LAT    | 1.000  |        |        |        |        |        |
+| LONG   | 0.097  | 1.000  |        |        |        |        |
+| MAP    | -0.247 | -0.734 | 1.000  |        |        |        |
+| MAT    | -0.839 | -0.213 | 0.355  | 1.000  |        |        |
+| JJAMAP | 0.074  | -0.492 | 0.112  | -0.081 | 1.000  |        |
+| DJFMAP | -0.065 | 0.771  | -0.405 | 0.001  | -0.792 | 1.000  |
+
+Note the **high correlations** between LAT and MAT, LONG and MAP, and JJAMAP and DJFMAP, suggesting that **collinearity** may be a problem with this analysis.
+
+#### Model 1: additive model
+
+With six predictor variables, a linear model with all possible interactions would have 64 model terms (plus an intercept) including four-, five- and six-way interactions that are extremely difficult to interpret. As a first pass, we fitted an additive model:
+
+$$(log_{10}C_3) = \beta_0 + \beta_1(LAT)_i + \beta_2(LONG)_i + \beta_3(MAP)_i + \beta_4(MAT)_i + \beta_5(JJAMAP)_i + \beta_6(DJFMAP)_i + \epsilon_i$$
+
+| Coefficient | Estimate | Standard error | Standardized coefficient | Tolerance | t      | P       |
+|-------------|----------|----------------|--------------------------|-----------|--------|---------|
+| Intercept   | -2.689   | 1.239          | 0                        |           | -2.170 | 0.034   |
+| LAT         | 0.043    | 0.010          | 0.703                    | 0.285     | 4.375  | \<0.001 |
+| LONG        | 0.007    | 0.010          | 0.136                    | 0.190     | 0.690  | 0.942   |
+| MAP         | \<0.001  | \<0.001        | 0.181                    | 0.357     | 1.261  | 0.212   |
+| MAT         | -0.001   | 0.012          | -0.012                   | 0.267     | -0.073 | 0.942   |
+| JJAMAP      | -0.834   | 0.475          | -0.268                   | 0.316     | -1.755 | 0.084   |
+| DJFMAP      | -0.962   | 0.716          | -0.275                   | 0.175     | -1.343 | 0.184   |
+
+**Let's do the same thing in R!**
+
+#### Model 1: all the explanatory variables
+
+```{r}
+model1 <- lm(LC3 ~ LAT + LONG + MAP + MAT + JJAMAP + DJFMAP, data = df)
+summary(model1)
+anova(model1)
+```
+
+Final equation for the model 1 (All the variables):
+
+```{r echo = F}
+equatiomatic::extract_eq(model1, intercept = "beta")
+equatiomatic::extract_eq(model1, intercept = "beta", use_coefs = T)
+```
+
+#### Tolerance
+
+In multiple regression analysis, **Variance Inflation Factor (VIF)** and **Tolerance** are both used to detect multicollinearity, a condition where independent variables are highly correlated. Here's what they represent:
+
+##### **Variance Inflation Factor (VIF):**
+
+-   **Definition**: VIF measures how much the variance of a regression coefficient is inflated due to multicollinearity among the predictor variables. The higher the VIF, the more collinear the variable is with others.
+
+-   **Interpretation**:
+
+    -   **VIF = 1**: No correlation between the predictor and the other variables.
+
+    -   **VIF between 1 and 5**: Moderate correlation; not usually a cause for concern.
+
+    -   **VIF \> 5 or 10**: High correlation; multicollinearity might be a problem that could distort the results.
+
+##### **Tolerance**:
+
+-   **Definition**: Tolerance is the reciprocal of VIF and measures the proportion of variance in a predictor that is not explained by the other predictors. It indicates how much of the variability of the independent variable is unique.
+
+    Tolerance = 1/VIF​
+
+-   **Interpretation**:
+
+    -   **Tolerance near 1**: Little or no multicollinearity.
+
+    -   **Tolerance \< 0.2 or 0.1**: Indicates potential multicollinearity issues.
+
+##### Relationship:
+
+-   When **VIF is large**, **Tolerance is small**.
+
+For example, if VIF is 5, Tolerance will be 0.2. If VIF is 10, Tolerance will be 0.1. Both VIF and Tolerance help in diagnosing multicollinearity, but using one is usually enough as they are inversely related.
+
+```{r message = F}
+library(car)
+# Variance Inflation Factors (VIF)
+vif(model1)
+# tolerance
+tolerance <- 1/vif(model1)
+tolerance
+```
+
+It is clear that collinearity is a problem with tolerances for two of the predictors (LONG & DJFMAP) approaching 0.1.
+
+#### Model 2: with interaction
+
+Paruelo & Lauenroth (1996) separated the predictors into two groups their analyses. **One group included LAT and LONG and the other included MAP, MAT, JJAMAP and DJFMAP.** We will focus on the relationship between log-transformed relative abundance of $C_3$ plants and latitude and longitude. We fitted a multiplicative model including an interaction term that measured how the relationship between $C_3$ plants and latitude could vary with longitude and vice versa:
+
+$(log_{10}C_3)_i = \beta_0 + \beta_1(LAT)_i + \beta_2(LONG)_i + \beta_3(LAT\times LONG)_i + \epsilon_i$
+
+| Coefficient       | Estimate | Standard error | Tolerance | t      | P-value |
+|-------------------|----------|----------------|-----------|--------|---------|
+| Intercept         | 7.391    | 3625           |           | 2.039  | 0.045   |
+| LAT               | -0.191   | 0.091          | 0.003     | -2.102 | 0.039   |
+| LONG              | -0.093   | 0.035          | 0.015     | -2.659 | 0.010   |
+| LAT $\times$ LONG | 0.002    | 0.001          | 0.002     | 2.572  | 0.012   |
+
+**Let's do that in R!**
+
+```{r}
+model2 <- lm(LC3 ~ LAT*LONG, data = df)
+summary(model2)
+```
+
+Final equation for the model 2 (Interaction):
+
+```{r echo = F}
+equatiomatic::extract_eq(model2, intercept = "beta")
+equatiomatic::extract_eq(model2, intercept = "beta", use_coefs = T)
+```
+
+```{r}
+# tolerance
+1/car::vif(model2)
+```
+
+Note the very low tolerances indicating high correlations between the predictor variables and their interactions. An indication of the effect of collinearity is that if we omit the interaction and refit the model, the partial regression slope for latitude changes sign.
+
+#### Model 3: centering and interaction
+
+We refitted the multiplicative model after centering both LAT and LONG.
+
+| Coefficient       | Estimate | Standard error | Tolerance | t      | P-value |
+|-------------------|----------|----------------|-----------|--------|---------|
+| Intercept         | -0.553   | 0.027          |           | 20.130 | \<0.001 |
+| LAT               | 0.048    | 0.006          | 0.829     | 8.483  | \<0.001 |
+| LONG              | -0.003   | 0.004          | 0.980     | -0.597 | 0.552   |
+| LAT $\times$ LONG | 0.002    | 0.001          | 0.820     | 2.572  | 0.012   |
+
+**Let's do that in R!**
+
+```{r}
+# center the variables LONG and LAT
+# note: the function c() was used only to structure the values from column to row 
+# to occupy less space in the screen.
+
+c(scale(df$LONG, scale = F))
+c(scale(df$LAT, scale = F))
+```
+
+However, these columns are already present in the dataset as `CLAT` and `CLONG`.
+
+```{r}
+model3 <- lm(LC3 ~ CLAT*CLONG, data = df)
+summary(model3)
+```
+
+Final equation for the model 3 (Interaction):
+
+```{r echo = F}
+equatiomatic::extract_eq(model3, intercept = "beta")
+equatiomatic::extract_eq(model3, intercept = "beta", use_coefs = T)
+```
+
+```{r}
+# tolerance
+1/car::vif(model3)
+```
+
+Now the collinearity problem has disappeared.
+
+#### Diagnostic plots
+
+```{r}
+par(mfrow = c(2,2))
+plot(model3)
+```
+
+Diagnostic checks of the model did not reveal any outliers nor influential values.
+
+#### Boxplot of residuals
+
+```{r}
+boxplot(residuals(model3))
+```
+
+The boxplot of residuals was reasonably symmetrical and although there was some heterogeneity in spread of residuals when plotted against predicted values, and a $45°$ line representing sites with zero abundance of $C_3$ plants, this was not of a form that could be simply corrected (Figure 6.2).
+
+#### Model 4: stepwise selection
+
+Stepwise selection is a method used in regression analysis to select the most significant predictors for a model. It involves adding or removing variables iteratively based on specific criteria, such as p-values, AIC (Akaike Information Criterion), or adjusted R². There are three main types: **forward selection**, which starts with no variables and adds them one by one; **backward elimination**, which starts with all variables and removes the least significant ones; and **stepwise selection**, which combines both forward and backward methods, adding or removing variables at each step. The goal is to find a balance between model simplicity and explanatory power.
+
+We'll use the function `step()`, with the argument:
+
+-   `direction = "both"` for stepwise selection
+
+-   `direction = "backward"` for backward selection
+
+-   `direction = "forward"` for forward selection
+
+Out of interest, we also ran the full model with all six predictors through both a forward and backward selection routine for stepwise multiple regression. For both methods, the significance level for entering and removing terms based on partial F statistics was set at 0.15.
+
+#### Backward selection
+
+The backward selection is as follows.
+
+| Coefficient | Estimate | Standard error | t      | P-value |
+|-------------|----------|----------------|--------|---------|
+| JJAMAP      | -1.002   | 0.433          | -2.314 | 0.024   |
+| DJFMAP      | -1.005   | 0.485          | -2.070 | 0.042   |
+| LAT         | 0.042    | 0.005          | 8.033  | \<0.001 |
+
+```{r}
+library(MASS)
+# we use an additive model with 6 explicative variables
+model4 <- lm(LC3 ~ MAP + MAT + JJAMAP + DJFMAP + LONG + LAT, data = df)
+# we apply the backward selection
+model4 <- step(model4, direction = "backward", test = "F")
+summary(model4)
+```
+
+Final equation for the model 4 (Backward):
+
+```{r echo = F}
+equatiomatic::extract_eq(model4, intercept = "beta")
+equatiomatic::extract_eq(model4, intercept = "beta", use_coefs = T)
+```
+
+The forward selection is as follows.
+
+| Coefficient | Estimate | Standard error | t      | P-value |
+|-------------|----------|----------------|--------|---------|
+| MAP         | \<0.001  | \<0.001        | 1.840  | 0.070   |
+| LAT         | 0.044    | 0.005          | 66.319 | \<0.001 |
+
+```{r}
+library(MASS)
+# we use an additive model with 6 explicative variables
+model4 <- lm(LC3 ~ MAP + MAT + JJAMAP + DJFMAP + LONG + LAT, data = df)
+# we apply the forward selection
+model4 <- step(model4, direction = "forward", test = "F")
+summary(model4)
+```
+
+Final equation for the model 4 (Forward):
+
+```{r echo = F}
+equatiomatic::extract_eq(model4, intercept = "beta")
+equatiomatic::extract_eq(model4, intercept = "beta", use_coefs = T)
+```
+
+::: callout-note
+The results in R differ from those in the book because it used different metrics to select the best model. The book uses an F-test set at 0.15.
+:::
+
+#### Metrics AIC and BIC for variable selection
+
+**Akaike Information Criterion (AIC)** and **Bayesian Information Criterion (BIC)** are statistical measures used for model selection, particularly in the context of regression and other predictive models. Both criteria penalize model complexity to prevent overfitting, but they do so differently: AIC is based on the concept of information loss, favoring models that minimize the information loss between the true model and the approximating model, while BIC incorporates a stronger penalty for the number of parameters as the sample size increases, making it more conservative in terms of model complexity. Specifically, AIC is calculated as
+
+AIC = $-2log(L) + 2k$ (where ($L$) is the likelihood of the model and ($k$) is the number of parameters), whereas BIC is computed as
+
+BIC = $-2log(L) + k \space log(n)$ (where ($n$) is the sample size).
+
+In practice, **lower values of** **AIC or BIC indicate a better-fitting model**, with AIC often used for predictive performance and BIC more frequently used for model selection when the goal is to identify the true model structure.
+
+#### Model 5: AIC for selecting the best model
+
+```{r}
+model5 <- lm(LC3 ~ MAP + MAT + JJAMAP + DJFMAP + LONG + LAT, data = df)
+# we select k = 2 to represent AIC 
+model5_AIC <- step(model5, direction = "backward", k = 2)
+# final model with the best AIC
+summary(model5_AIC)
+```
+
+Final equation for the model 5 (AIC - backward):
+
+```{r echo = F}
+equatiomatic::extract_eq(model5_AIC, intercept = "beta")
+equatiomatic::extract_eq(model5_AIC, intercept = "beta", use_coefs = T)
+```
+
+##### Applying BIC for selecting the best model
+
+```{r}
+model5 <- lm(LC3 ~ MAP + MAT + JJAMAP + DJFMAP + LONG + LAT, data = df)
+# we apply k = log of the number of observations to represent BIC
+# n is the number of observations in your dataset
+n <- nrow(df)
+model5_BIC <- step(model5, direction = "backward", k = log(n))
+# final model with the best BIC
+summary(model5_BIC)
+
+```
+
+Final equation for the model 5 (BIC):
+
+```{r echo = F}
+equatiomatic::extract_eq(model5_BIC, intercept = "beta")
+equatiomatic::extract_eq(model5_BIC, intercept = "beta", use_coefs = T)
+```
+
+#### When to use AIC or BIC
+
+-   Use **AIC** for better predictive accuracy, especially when working with smaller datasets or when the true model is likely complex.
+
+-   Use **BIC** for simpler, more parsimonious models, especially when you have a large dataset and want to avoid overfitting.
+
+#### Importance of RMSE
+
+The Root Mean Squared Error (RMSE) is a key metric for evaluating the performance of predictive models, especially in regression analysis. It provides a measure of how well a model's predictions match the actual observed data. Here are some reasons why RMSE is important in evaluating models:
+
+##### 1. **Measures Prediction Accuracy**:
+
+RMSE gives a direct indication of how close the predicted values are to the actual values in the dataset. Lower RMSE values indicate better fit, as they suggest that the predictions are closer to the real observations.
+
+##### 2. **Interpretability**:
+
+RMSE is expressed in the same units as the dependent variable (response variable), making it easy to interpret in the context of the problem. For example, if you're predicting house prices in dollars, RMSE will tell you the average prediction error in dollars, which makes it more intuitive.
+
+##### 3. **Sensitive to Large Errors**:
+
+RMSE gives more weight to large errors due to the squaring of the residuals before averaging. This makes RMSE a good choice when you want to penalize models that make large prediction errors and want to emphasize minimizing significant deviations.
+
+##### 4. **Comparison of Models**:
+
+RMSE is often used to compare different models' performances. The model with the lowest RMSE is usually considered the better model when comparing across models with similar complexity and scale. It helps in choosing between competing models during model selection.
+
+##### 5. **Standard Model Performance Metric**:
+
+RMSE is one of the most commonly used metrics in machine learning and statistical modeling. It provides a standard way to evaluate models across different domains and applications.
+
+##### Limitations of RMSE:
+
+-   **Sensitive to Scale**: If your dependent variable has a wide range, RMSE values can be misleading. In such cases, normalized error metrics like MAE (Mean Absolute Error) might complement RMSE.
+
+-   **Doesn't Work Well with Outliers**: Since RMSE squares the errors, it can be disproportionately affected by outliers, making it essential to consider this when choosing it as a performance measure.
+
+In summary, RMSE is important because it gives a clear, interpretable, and meaningful measure of prediction accuracy and helps guide model comparison and selection based on how well a model can predict unseen data.
+
+```{r}
+sqrt(mean(model5_BIC$residuals^2))
+```

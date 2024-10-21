@@ -1,0 +1,265 @@
+---
+title: "Simple Linear Regression (5.1, 5.2)"
+format: 
+  html:
+    toc: true
+    page-layout: full
+    toc-depth: 4
+    toc-location: left          
+editor: visual
+---
+
+Example from the book *Experimental Design and Data Analysis for Biologists* by Gerry P. Quinn and Michael J. Keough
+
+Page 81, Chapter 5 - Correlation and regression.
+
+::: {.callout-caution appearance="minimal"}
+#### Box 5.4 - Worked example of linear regression analysis: species richness of macroinvertebrates in mussel clumps.
+
+Peake & Quinn (1993) investigated the relationship between the number of species of macroinvertebrates, and the total abundance of macroinvertebrates, and area of clumps of mussels on a rocky shore in southern Australia. The variables of interest are clump area (dm$^2$), number of species, and number of individuals.
+
+##### Number of species against clump area
+
+A scatterplot of number of species against clump area, and the plot of residuals against predicted number of species from a linear regression analysis,both suggested a nonlinear relationship (Figure 5.17(a,b)). Although only clump area was positively skewed, Peake & Quinn (1993) transformed both variables because of the nature of the species--area relationships for other seasons in their study plus the convention in species--area studies to transform both variables. The scatterplot of log number of species against log clump area (Figure 5.18) linearized the relationship effectively except for one of the small clumps. The residual plot also showed no evidence of nonlinearity but that same clump had a larger residual and was relatively influential (Cook's D$_i$ = 1.02). Reexamination of the raw data did not indicate any problems with this observation and omitting it did not alter the conclusions from the analysis ($\beta_1$ changed from 0.386 to 0.339, r$^2$ from 0.819 to 0.850, all tests still P \< 0.001) so it was not excluded from the analysis. In fact, just transforming clump area produced the best linearizing of the relationship with no unusually large residuals or Cook's D$_i$ statistics but, for the reasons outlined above, both variables were transformed. The results of the OLS fit of a linear regression model to log number of species and log clump area were as follows.
+
+The results of the OLS fit of a linear regression model to log number of species and log clump area were as follows.
+
+The $t$ test and the ANOVA $F$ test cause us to reject the $H_0$ that $\beta_1$ equals zero. We would also reject the $H_0$ that $\beta_0$ equals zero, indicating that the relationship between species number and clump area must be nonlinear for small clump sizes since the model must theoretically go through the origin. The $r^2$ value (0.819) indicates that we can explain about 82% of the total variation in log number of species by the linear regression with log clump area.
+
+##### Number of individuals against clump area
+
+A scatterplot of number of individuals against clump area, with a Loess smoother fitted, suggested an approximately linear relationship (Figure 5.19(a)). The plot of residuals against predicted number of individuals from a linear regression model fitted to number of individuals against clump area (Figure 5.19(b)) showed a clear pattern of increasing spread of residuals against increasing predicted number of individuals (or, equivalently, clump area); the pattern in the residuals was wedge-shaped. The boxplots in Figure 5.19(a) indicated that both variables were positively skewed so we transformed both variables to logs to correct for variance heterogeneity. The scatterplot of log number of individuals against log clump area (Figure 5.20(a)) showed an apparent reasonable fit of a linear regression model, with symmetrical boxplots for both variables. The residual plot showed a more even spread of residuals with little wedge-shaped pattern (Figure 5.20(b)). The results of the OLS fit of a linear regression model to log number of individuals and log clump area were as follows.
+
+The $t$ test and the ANOVA $F$ test cause us to reject the $H_0$ that $\beta_1$ equals zero. We would also reject the $H_0$ that $\beta_0$ equals zero, although this test is of little biological interest. The $r^2$ value (0.859) indicates that we can explain about 86% of the total variation in log number of individuals by the linear regression with log clump area.
+:::
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+# get thedata
+df <- read.csv("data/peake.csv")
+```
+
+```{r}
+DT::datatable(df)
+```
+
+#### A first look at the data
+
+We want to adjust the number of species (Y) based on its area (X).
+
+```{r}
+ggplot(data = df, aes(x = AREA, y = SPECIES)) +
+  geom_point()
+```
+
+#### Linear regression
+
+We use the function `lm()` to adjust the linear regression model. We use the following formula: `Y ~ X.`
+
+```{r  echo = F}
+options(scipen=999)
+```
+
+```{r}
+model <- lm(SPECIES ~ AREA, data = df)
+```
+
+#### Main info about the model
+
+```{r}
+summary(model)
+```
+
+::: callout-note
+### We obtained:
+
+-   **Estimate**: The estimated coefficients for each predictor, including the intercept. These show how much the dependent variable changes for a one-unit change in the predictor.
+
+-   **Std. Error**: The standard error of the estimated coefficients, indicating the variability in the coefficient estimates.
+
+-   **t-value**: The t-statistic for testing whether the coefficient is significantly different from zero. It is calculated as the Estimate divided by the Std. Error.
+
+-   **Pr(\>\|t\|)**: The p-value corresponding to the t-statistic, which indicates whether the predictor is statistically significant. A small p-value (e.g., \< 0.05) suggests the predictor significantly contributes to the model.
+:::
+
+#### Plot of the regression model
+
+```{r}
+plot1 <- ggplot(df, aes(x = AREA, y = SPECIES)) +
+  geom_point() +                        # Scatter plot
+  geom_smooth(method = "lm", se = FALSE, color = "red")  
+plot1
+```
+
+#### Residuals vs. fitted data (non transformed data)
+
+```{r}
+plot(model, which = 1)
+```
+
+There shouldn't be a large variation of the residuals. We will change the scale of the data. Let's take a look at the data distributions first using histograms.
+
+```{r}
+# histogram of area
+hist(df$AREA)
+# quantiles of area
+summary(df$AREA)
+```
+
+```{r}
+# histogram of species
+hist(df$SPECIES)
+# quantiles of species
+summary(df$SPECIES)
+```
+
+#### When to apply the log transformation:
+
+-   When your residuals show non-constant variance (heteroscedasticity) or skewness.
+
+-   When the relationship between variables seems non-linear but multiplicative.
+
+-   When your variables contain large ranges of values or outliers that affect the model.
+
+We could have transformed the data into $log_{10}$ using
+
+```{r}
+log10(df$AREA)
+```
+
+We already the have the transformed data ($log_{10}$) ready on the variable `LAREA` and `LESPECIES`.
+
+#### Model with the transformed data
+
+```{r}
+model_transformed <- lm(LSPECIES ~ LAREA, data = df)
+```
+
+#### Main info about the new model
+
+```{r}
+summary(model_transformed)
+```
+
+#### Plot of the regression line
+
+```{r}
+plot2 <- ggplot(df, aes(x = LAREA, y = LSPECIES)) +
+  geom_point() +                        # Scatter plot
+  geom_smooth(method = "lm", se = FALSE, color = "red")  
+plot2
+```
+
+#### Residuals vs. fitted data (transformed data)
+
+```{r}
+plot(model_transformed, which = 1)
+```
+
+#### Comparing the regression lines
+
+```{r}
+gridExtra::grid.arrange(plot1, plot2, ncol=2)
+```
+
+#### Comparing the residuals
+
+Let's check the difference in the residuals with non transformed and transformed data.
+
+```{r}
+# residuals versus fitted of non transformed data
+plot(model, which = 1)
+# residuals versus fitted of transformed data
+plot(model_transformed, which = 1)
+```
+
+#### Cook's Distance
+
+We will analyse now another measure called Cook's Distance. It is used to help identify influential data points that have a significant impact on the fitted model. It combines information on both leverage (how far the independent variable is from the mean) and residuals (how far the predicted value is from the actual value).
+
+What Cook's Distance represents:
+
+-   **Influence**: It shows how much the estimated regression coefficients (the slope and intercept) would change if a particular data point were removed from the analysis.
+
+-   A large Cook's Distance indicates that a point is influential, meaning it has a considerable impact on the regression model, and removing it could lead to a significantly different model.
+
+::: callout-note
+#### Interpretation:
+
+-   A general rule of thumb is that points with a **Cook's Distance greater than 1** may be considered influential.
+
+-   However, this threshold can vary depending on the dataset and the number of observations. For smaller datasets, a lower threshold might be more appropriate.
+:::
+
+We can get the values using the following function
+
+```{r}
+# get the values and add in the dataset
+df$cook <- cooks.distance(model_transformed)
+```
+
+Let's see the first 5 variables and the cook's distance values.
+
+```{r}
+DT::datatable(df[,c(1:5,15)])
+```
+
+::: callout-note
+## What we observed
+
+The first value `LAREA` = 2.71 and `LSPECIES` = 0.47 has a Cook's Distance of 1.022, which is higher than 1, considered influential.
+
+However, deciding whether to delete a point based solely on Cook's Distance requires careful consideration of the context and the nature of the data. Here's when and how to evaluate whether to delete a point with a high Cook's Distance value:
+
+-   **Check for Data Entry Errors**: If the data point with high Cook's Distance is a result of an entry mistake (e.g., a typo or incorrect measurement), you can justify removing or correcting it.
+
+-   **Check for Validity**: Ensure the data point is valid and not an outlier due to faulty data collection or recording. If it's valid, you might consider keeping it, but see if it warrants a different treatment (such as robust regression).
+
+Based on these considerations, we decided not to delete this point.
+:::
+
+We can also plot these values.
+
+```{r}
+plot(model_transformed, which = 4)
+```
+
+#### Creating a new column based on a unity transformation
+
+Now, we will change the air unit from $cm^2$ to $dm^2$ and insert in a new column called `LDMAREA`.
+
+We will apply the following formula:
+
+$log_{10}$ of (area / 10000)
+
+```{r}
+df$LDMAREA <- log10(df$AREA/10000)
+```
+
+#### New regression with transformed unit of area
+
+```{r}
+model_new_unit <- lm(LSPECIES ~ LDMAREA, data = df)
+
+summary(model_new_unit)
+
+```
+
+::: callout-note
+Checking the estimated coefficients, the new regression line can be expressed by
+
+LSPECIES = 1.26 + 0.38\*LMDAREA
+:::
+
+#### Analysis of variance of the model
+
+```{r}
+anova(model_new_unit)
+```
+
+::: callout-note
+The variable `LDMAREA` has 1 degree of freedom `(df)` and the residuals/errors have 23 degrees of freedom.
+:::

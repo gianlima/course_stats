@@ -4,16 +4,42 @@ project:
 
 website:
   sidebar:
-    style: "docked"
+    style: "floating"
+    background: "light"
+    logo: UQAC_Couleur.png
     search: true
     contents:
-      - text: "Título"
+      - text: "Home"
         href: index.qmd
+      - text: "Correlation & Simple Regression"
+        href: correlation.qmd
+      - text: "Other types of correlation"
+        href: non-parametric.qmd
+      - text: "Simple Linear Regression"
+        href: simple_linear_regression.qmd
+      - text: "Multiple Linear Regression"
+        href: mutiple_linear_regression.qmd
+      - text: "One-way ANOVA"
+        href: oneway_anova.qmd
+      - text: "ANOVA with Repeated Measures"
+        href: anova_repeated_measures.qmd
+      - text: "Two-way ANOVA (fixed effects)"
+        href: two-way-anova.qmd
+      - text: "Two-way ANOVA (fixed and random effects)"
+        href: two_way_anova_fixed_random.qmd
+      - text: "Two-way ANOVA (random block)"
+        href: two-way-anova-random-block.qmd
 
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
+    font-size: 20px
+    grid:
+      sidebar-width: 300px
+      body-width: 900px
+      margin-width: 300px
+      gutter-width: 1.5rem
 
 editor: visual

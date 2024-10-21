@@ -1,0 +1,120 @@
+---
+title: "Two-way ANOVA (fixed effects)"
+format: 
+  html:
+    toc: true
+    page-layout: full
+    toc-depth: 4
+    toc-location: left          
+editor: visual
+---
+
+A **two-way ANOVA (Analysis of Variance)** is a statistical method used to examine the influence of two different categorical independent variables (factors) on a continuous dependent variable. It helps determine whether there are any statistically significant differences between the means of groups that are categorized based on these two factors. It also allows for the exploration of possible interactions between the two factors.
+
+#### Key Elements:
+
+1.  **Factors**: These are the independent variables. Each factor can have two or more levels (groups).
+
+    -   For example, you might look at *Factor 1: Type of Diet* (e.g., diet A, diet B) and *Factor 2: Exercise Level* (e.g., low, medium, high).
+
+2.  **Dependent Variable**: This is the continuous variable being measured across the groups.
+
+    -   For example, you might measure the *Weight Loss* as the dependent variable.
+
+#### Types of Effects:
+
+-   **Main Effects**:
+
+    -   These test whether the levels of each factor alone (independent of the other factor) have a significant effect on the dependent variable. In the example above, the main effects would tell you if either *diet* or *exercise level* independently affect weight loss.
+
+-   **Interaction Effect**:
+
+    -   This tests whether the effect of one factor depends on the level of the other factor. For example, does the impact of the diet on weight loss depend on the exercise level?
+
+------------------------------------------------------------------------
+
+### Practical example
+
+**Data we'll use:** `quinn.csv` (chap 9), boîte 9.4 p.224 Quinn & Keough
+
+#### Box 9.4 Worked example of two factor fixed effects ANOVA
+
+Quinn (1988) examined the effects of **season** (winter/spring and summer/autumn) and adult **density** (8, 15, 30 and 45 animals per 225 cm^2^ enclosure) on the **production of egg masses** by intertidal pulmonate limpets (*Siphonaria diemenensis*). There were three replicate enclosures per treatment combination and the response variable was the number of egg masses per limpet in each enclosure.
+
+The null hypotheses were as follows.
+
+-   No difference between mean number of egg masses laid in each season, pooling densities.
+
+-   No difference in mean number of egg masses laid at each density, pooling seasons.
+
+-   No interaction between season and density, i.e. the effect of density on mean numbers of egg masses laid is independent of season and vice versa.
+
+```{r}
+# get thedata
+df <- read.csv("data/quinn.csv")
+```
+
+```{r}
+# view the data
+DT::datatable(df)
+```
+
+#### A plot to understand the data
+
+```{r}
+library(ggplot2)
+ggplot(data = df, aes(x = DENSITY, y = EGGS, color = SEASON)) +
+  geom_point() +
+  facet_wrap(~SEASON)
+```
+
+Three observations for each category of **DENSITY** and **SEASON**.
+
+#### Turn them into groups/factors
+
+Categorical variables should be changes to **factor** first!
+
+```{r}
+df$DENSITY <- as.factor(df$DENSITY)
+df$SEASON <- as.factor(df$SEASON)
+
+# check how many of each group
+table(density = df$DENSITY, season = df$SEASON)
+```
+
+4 types of density with 3 replications per season (spring, summer)
+
+#### Two-way ANOVA analysis
+
+We will examine the influence of **DENSITY** and **SEASON** (two categorical independent variables) on **EGGS** (continuous dependent variable). We will determine whether there are any statistically significant differences between the means of groups (**DENSITY** and **SEASON**) that are categorized based on these two factors.
+
+```{r}
+
+model <- aov(EGGS ~ DENSITY*SEASON, data = df)
+summary(model)
+```
+
+**Interpretation**: significant effects of **DENSITY** and **SEASON**, but no significant effect of their interaction.
+
+However, the effects of DENSITY and SEASON on EGGS are the same in all categories?
+
+## Multiple comparisons: Tukey
+
+The **Tukey multiple comparison test** is used after conducting an ANOVA to identify which specific groups' means are different from each other.
+
+```{r}
+TT <- agricolae::HSD.test(model, trt = 'DENSITY')
+TT
+```
+
+We observe the assigned letters (a,b and c) for the categories of DENSITY.
+
+**How to interpret:**
+
+Categories with the same letters present same mean. Categories 8 and 15 received the letter 'a', so it means that their means don't differ. Category 8 and 45 don't have any letter in common, which means that their mean is different. Categories 8 and 30 have different means too.
+
+#### Visualizations of the effect
+
+```{r}
+plot(effects::allEffects(model))
+```

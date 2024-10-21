@@ -1,9 +1,9 @@
 ---
-title: "Analyses quantitatives dans le domaine des ressources renouvelables"
+title: "1MRR823 - Analyses quantitatives dans le domaine des ressources renouvelables"
 ---
 
-vendo se foi
 
-```{r}
-1 + 1
-```
+#### Welcome to the resource hub for the course 1MRR823! Here, you'll find a collection of R code snippets designed to enhance your learning experience. These codes are tailored to support the concepts covered in class and help you apply your knowledge effectively. Dive in and explore!
+
+
+You can use the links on the left side to choose your subject.

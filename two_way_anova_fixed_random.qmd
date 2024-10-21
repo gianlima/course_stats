@@ -1,0 +1,92 @@
+---
+title: "Two-way ANOVA (fixed and random effects)"
+format: 
+  html:
+    toc: true
+    page-layout: full
+    toc-depth: 4
+    toc-location: left          
+editor: visual
+---
+
+**Data we'll use:** `andrew.csv` (chap 9), boîte 9.1 p. 209 Quinn & Keough
+
+#### Box 9.1 Worked example of nested ANOVA: grazing by sea urchins
+
+Andrew & Underwood (1993) manipulated the density of sea urchins in the shallow subtidal region of a site near Sydney to test the effects on the **percentage cover of filamentous algae (ALGAE)**. There were **four urchin treatments (TREAT)** (no urchins, 33% of original density, 66% of original density and 100% of orginal density). The treatments were replicated in **four distinct patches (PATCH)** (3--4 m^2^) per treatment and percentage cover of filamentous algae (response variable) was measured in **five random quadrats** **(QUAD)** per patch.
+
+::: callout-note
+This is a nested design with **treatment (fixed factor)**, **patch nested within treatment (random factor)** and **quadrats as the residual**.
+:::
+
+```{r}
+# get the data
+df <- read.csv("data/andrew.csv")
+```
+
+```{r}
+# view the data
+DT::datatable(df)
+```
+
+#### Plot the data
+
+```{r}
+library(ggplot2)
+ggplot(df, aes(x = factor(PATCH), y = ALGAE, color = TREAT)) +
+  geom_point() +
+  facet_wrap(~ TREAT, labeller = label_both) +
+  labs(x = "PATCH", color = "TREATMENT")
+```
+
+**Null hypotheses**
+
+-   No difference in the mean amount of filamentous algae between the four sea urchin density treatments.
+
+-   No difference in the mean amount of filamentous algae between all possible patches in any of the treatments.
+
+#### Anova with fixed and random effects (`anovaMM`)
+
+```{r}
+# make sure the factors are correct
+df$PATCH <- as.factor(df$PATCH)
+df$TREAT <- as.factor(df$TREAT)
+```
+
+```{r warning = F, message = F}
+library(VCA)
+model_vca <- anovaMM(ALGAE ~ TREAT + (TREAT/PATCH), Data = df)
+model_vca
+# plot the model
+plot(model_vca)
+# coefficients
+coef(model_vca)
+```
+
+#### Confidence intervals
+
+Function `VCAinference` constructs one- and two-sided confidence intervals, and performs Chi-Squared tests for total and error variance against claimed values for 'VCA' objects.
+
+```{r}
+VCAinference(model_vca)
+```
+
+#### Using function `lmer()`
+
+```{r warning = F, message = F}
+library(lme4)
+model <- lme4::lmer(ALGAE ~ TREAT + (1 | TREAT/PATCH), data = df, REML=FALSE)
+model
+
+
+```
+
+-   The fixed effects indicate how each treatment compares to the baseline level (intercept) of ALGAE. Each treatment increases the expected ALGAE level by the respective amounts.
+
+-   The random effects suggest variability in ALGAE levels based on the combination of PATCH and TREAT, but no variability in the treatment effect itself (as indicated by the zero standard deviation for TREAT).
+
+-   The residual standard deviation indicates how much variability remains in ALGAE after accounting for the fixed and random effects.
+
+### Conclusion
+
+Overall, this model suggests that while different treatments lead to significant changes in the response variable, the variability of these effects across patches is substantial, with no inherent random variability in treatment effects themselves.

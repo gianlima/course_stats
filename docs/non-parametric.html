@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1MRR823 - Analyses quantitatives dans le domaine des ressources renouvelables</title>
+<title>Types of correlation (4.3)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -60,11 +94,13 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar docked">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -73,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./non-parametric.html">Other types of correlation</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -83,9 +119,9 @@ ul.task-list li input[type="checkbox"] {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
       <a href="./index.html" class="sidebar-logo-link">
       <img src="./UQAC_Couleur.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
@@ -100,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
@@ -112,26 +148,20 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./non-parametric.html" class="sidebar-item-text sidebar-link">
+  <a href="./non-parametric.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Other types of correlation</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./simple_linear_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Simple Linear Regression</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./mutiple_linear_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Multiple Linear Regression</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./oneway_anova.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">One-way ANOVA</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./simple_linear_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simple Linear Regression</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -160,18 +190,27 @@ ul.task-list li input[type="checkbox"] {
 </li>
     </ul>
     </div>
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#example" id="toc-example" class="nav-link active" data-scroll-target="#example">Example</a></li>
+  <li><a href="#pearsons-correlation-for-site-ds" id="toc-pearsons-correlation-for-site-ds" class="nav-link" data-scroll-target="#pearsons-correlation-for-site-ds">Pearson’s correlation for site DS</a></li>
+  <li><a href="#spearmans-correlation-for-site-ds" id="toc-spearmans-correlation-for-site-ds" class="nav-link" data-scroll-target="#spearmans-correlation-for-site-ds">Spearman’s correlation for site DS</a></li>
+  <li><a href="#kendalls-correlation-for-site-ds" id="toc-kendalls-correlation-for-site-ds" class="nav-link" data-scroll-target="#kendalls-correlation-for-site-ds">Kendall’s correlation for site DS</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page-right" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">1MRR823 - Analyses quantitatives dans le domaine des ressources renouvelables</h1>
+<h1 class="title">Types of correlation (4.3)</h1>
 </div>
 
 
@@ -186,9 +225,187 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="welcome-to-the-resource-hub-for-the-course-1mrr823-here-youll-find-a-collection-of-r-code-snippets-designed-to-enhance-your-learning-experience.-these-codes-are-tailored-to-support-the-concepts-covered-in-class-and-help-you-apply-your-knowledge-effectively.-dive-in-and-explore" class="level4">
-<h4 class="anchored" data-anchor-id="welcome-to-the-resource-hub-for-the-course-1mrr823-here-youll-find-a-collection-of-r-code-snippets-designed-to-enhance-your-learning-experience.-these-codes-are-tailored-to-support-the-concepts-covered-in-class-and-help-you-apply-your-knowledge-effectively.-dive-in-and-explore">Welcome to the resource hub for the course 1MRR823! Here, you’ll find a collection of R code snippets designed to enhance your learning experience. These codes are tailored to support the concepts covered in class and help you apply your knowledge effectively. Dive in and explore!</h4>
-<p>You can use the links on the left side to choose your subject.</p>
+<p>It is necessary to verify some aspects of the data in order to check the correlation between the variables.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="data/0_jaBjgiUZuTEydu1D.webp" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<table class="table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 20%">
+<col style="width: 35%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th><strong>Pearson</strong></th>
+<th><strong>Spearman</strong></th>
+<th><strong>Kendall</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Type of relationship</strong></td>
+<td>Linear</td>
+<td>Monotonic (any shape)</td>
+<td>Monotonic (any shape)</td>
+</tr>
+<tr class="even">
+<td><strong>Data assumptions</strong></td>
+<td>Continuous, normal, no outliers</td>
+<td>Ordinal or continuous, any distribution, fewer assumptions</td>
+<td>Ordinal or continuous, handles tied ranks well</td>
+</tr>
+<tr class="odd">
+<td><strong>Effect of outliers</strong></td>
+<td>Sensitive to outliers</td>
+<td>Less sensitive</td>
+<td>Least sensitive</td>
+</tr>
+<tr class="even">
+<td><strong>Range</strong></td>
+<td>-1 to 1</td>
+<td>-1 to 1</td>
+<td>-1 to 1</td>
+</tr>
+<tr class="odd">
+<td><strong>Use case</strong></td>
+<td>Linear relationships, normal data</td>
+<td>Non-linear, monotonic relationships, or ordinal data</td>
+<td>Small datasets, ordinal data, or data with ties</td>
+</tr>
+</tbody>
+</table>
+<p>We can use the same function in R for all these correlations. In the function <code>cor.test()</code>, we just need to change the parameter <code>method</code> to <code>"pearson"</code>, <code>"spearman"</code> or <code>"kendall"</code>.</p>
+<section id="example" class="level4">
+<h4 class="anchored" data-anchor-id="example">Example</h4>
+<pre><code>cor.test(formula = ~ VARIABLE_1 + VARIABLE_2, data = DATASET, method = "pearson")
+cor.test(formula = ~ VARIABLE_1 + VARIABLE_2, data = DATASET, method = "kendall")
+cor.test(formula = ~ VARIABLE_1 + VARIABLE_2, data = DATASET, method = "spearman")</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/green.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="pearsons-correlation-for-site-ds" class="level3">
+<h3 class="anchored" data-anchor-id="pearsons-correlation-for-site-ds">Pearson’s correlation for site DS</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># separate the sites</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_siteDS <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, SITE <span class="sc">==</span> <span class="st">"DS"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get the correlation</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">formula =</span> <span class="sc">~</span> TOTMASS <span class="sc">+</span> BURROWS, <span class="at">data =</span> df_siteDS, <span class="at">method =</span> <span class="st">"pearson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  TOTMASS and BURROWS
+t = 1.0428, df = 6, p-value = 0.3372
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.4322803  0.8592175
+sample estimates:
+      cor 
+0.3917155 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpretation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Moderate Positive Correlation</strong>: The Pearson correlation coefficient of approximately 0.3917 indicates a moderate positive correlation between <code>TOTMASS</code> and <code>BURROWS</code>, suggesting that as one variable increases, the other tends to increase as well.</p>
+<p><strong>Not Statistically Significant</strong>: The p-value of 0.3372 indicates that this correlation is not statistically significant, meaning that it could easily arise due to random chance in this sample.</p>
+<p><strong>Confidence Interval</strong>: The confidence interval ranging from -0.4323 to 0.8592 includes zero, reinforcing the idea that there is insufficient evidence to conclude a true correlation exists in the population.</p>
+</div>
+</div>
+</section>
+<section id="spearmans-correlation-for-site-ds" class="level3">
+<h3 class="anchored" data-anchor-id="spearmans-correlation-for-site-ds">Spearman’s correlation for site DS</h3>
+<p>This correlation uses the Greek letter <span class="math inline">\(\rho\)</span> (Rho).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># separate the sites</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_siteDS <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, SITE <span class="sc">==</span> <span class="st">"DS"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get the correlation</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">formula =</span> <span class="sc">~</span> TOTMASS <span class="sc">+</span> BURROWS, <span class="at">data =</span> df_siteDS, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in cor.test.default(x = mf[[1L]], y = mf[[2L]], ...): Cannot compute
+exact p-value with ties</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  TOTMASS and BURROWS
+S = 69.916, p-value = 0.6915
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.1676677 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpretation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Weak Correlation</strong>: The correlation coefficient (rho = 0.1677) suggests a weak positive correlation between <code>TOTMASS</code> and <code>BURROWS</code>.</p>
+<p><strong>Not Significant</strong>: The high p-value (0.6915) indicates that this weak correlation is not statistically significant, meaning that there’s no strong evidence of a monotonic relationship between the variables in the sample.</p>
+<p><strong>Ties in Data</strong>: The presence of ties in the data affects the precision of the p-value calculation, but it does not change the interpretation that the relationship between <code>TOTMASS</code> and <code>BURROWS</code> is likely weak and non-significant in this case.</p>
+</div>
+</div>
+</section>
+<section id="kendalls-correlation-for-site-ds" class="level3">
+<h3 class="anchored" data-anchor-id="kendalls-correlation-for-site-ds">Kendall’s correlation for site DS</h3>
+<p>This correlation uses the Greek letter <span class="math inline">\(\tau\)</span> (tau).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># separate the sites</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df_siteDS <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, SITE <span class="sc">==</span> <span class="st">"DS"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get the correlation</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">formula =</span> <span class="sc">~</span> TOTMASS <span class="sc">+</span> BURROWS, <span class="at">data =</span> df_siteDS, <span class="at">method =</span> <span class="st">"kendall"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in cor.test.default(x = mf[[1L]], y = mf[[2L]], ...): Cannot compute
+exact p-value with ties</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Kendall's rank correlation tau
+
+data:  TOTMASS and BURROWS
+z = 0.12468, p-value = 0.9008
+alternative hypothesis: true tau is not equal to 0
+sample estimates:
+       tau 
+0.03636965 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpretation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Very Weak Correlation</strong>: The tau value (0.03637) indicates a very weak positive correlation, suggesting that <code>TOTMASS</code> and <code>BURROWS</code> do not have a meaningful monotonic relationship.</p>
+<p><strong>Not Significant</strong>: The high p-value (0.9008) shows that the weak correlation is not statistically significant, leading to the conclusion that you cannot reject the null hypothesis that the true Kendall correlation is zero.</p>
+<p><strong>Ties in Data</strong>: As with the Spearman correlation, the presence of ties impacts the precision of the p-value calculation, but the interpretation remains consistent: the relationship between <code>TOTMASS</code> and <code>BURROWS</code> is weak and not significant.</p>
+</div>
+</div>
 
 
 </section>
