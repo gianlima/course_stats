@@ -58,6 +58,7 @@ df <- pivot_longer(df,
                    values_to = "number")
 df$year <- as.factor(df$year)
 ```
+
 #### Normality assumption
 
 ```{r}
@@ -66,13 +67,11 @@ ggqqplot(df, "number", facet.by = "year")
 
 From the plot above, as all the points fall approximately along the reference line, we can assume normality, apart from 1 point.
 
-
 #### Visualization
 
 ```{r}
 ggboxplot(df, x = "year", y = "number", add = "point")
 ```
-
 
 #### Testing for Sphericity: Mauchly's Test of Sphericity
 
