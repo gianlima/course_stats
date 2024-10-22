@@ -5,7 +5,7 @@ format:
     toc: true
     page-layout: full
     toc-depth: 4
-    toc-location: left          
+    toc-location: right          
 editor: visual
 ---
 
@@ -96,7 +96,7 @@ With six predictor variables, a linear model with all possible interactions woul
 $$(log_{10}C_3) = \beta_0 + \beta_1(LAT)_i + \beta_2(LONG)_i + \beta_3(MAP)_i + \beta_4(MAT)_i + \beta_5(JJAMAP)_i + \beta_6(DJFMAP)_i + \epsilon_i$$
 
 | Coefficient | Estimate | Standard error | Standardized coefficient | Tolerance | t      | P       |
-|-------------|----------|----------------|--------------------------|-----------|--------|---------|
+|----------|----------|----------|------------|----------|----------|----------|
 | Intercept   | -2.689   | 1.239          | 0                        |           | -2.170 | 0.034   |
 | LAT         | 0.043    | 0.010          | 0.703                    | 0.285     | 4.375  | \<0.001 |
 | LONG        | 0.007    | 0.010          | 0.136                    | 0.190     | 0.690  | 0.942   |

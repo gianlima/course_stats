@@ -1,0 +1,66 @@
+/* Change the background color for the whole document */
+body {
+    background-color: #ffffff; /* Replace with your desired color */
+    color: #000000; /* Set text color to black */
+
+}
+
+
+/* Minimalistic round scrollbar */
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+    height: 12px; /* Height for horizontal scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Light background for the scrollbar track */
+    border-radius: 12px; /* Rounded track */
+}
+
+/* Handle (thumb) */
+::-webkit-scrollbar-thumb {
+    background-color: #D3D3D3; /* Color of the scroll thumb */
+    border-radius: 12px; /* Roundness of the scrollbar thumb */
+    border: 2px solid #f0f0f0; /* Adds space around thumb */
+}
+
+/* Hover effect on the scrollbar thumb */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #949494; /* Darker color when hovered */
+}
+
+pre.sourceCode {
+    background-color: #f5f5f5; /* Light gray background */
+    border: none;
+}
+
+table, th, td {
+    color: #000000; /* Set text color to black */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #0047AB; /* Set the text color of all headings to black */
+    font-weight: bold;
+}
+
+.sidebar nav[role="doc-toc"] ul > li > a.active {
+    color: #0047AB !important;
+    background-color: none;
+}
+
+.sidebar a:hover {
+    color: #0047AB; /* Darker color on hover */
+    text-decoration: none; /* Optional: Underline on hover */
+}
+
+
+
+
+
+
+
+
+
+
+
