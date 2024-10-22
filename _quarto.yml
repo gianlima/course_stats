@@ -4,13 +4,12 @@ project:
 
 website:
   sidebar:
-    style: "docked"
-    background: "light"
+    title: "Course 1MRR823"
+    style: "floating"
+    background: "#ffffff"
     logo: UQAC_Couleur.png
-    search: true
+    search: false
     contents:
-      - text: "Home"
-        href: index.qmd
       - text: "Correlation & Simple Regression"
         href: correlation.qmd
       - text: "Other types of correlation"
@@ -19,16 +18,31 @@ website:
         href: simple_linear_regression.qmd
       - text: "Multiple Linear Regression"
         href: mutiple_linear_regression.qmd
-      - text: "One-way ANOVA"
-        href: oneway_anova.qmd
-      - text: "ANOVA with Repeated Measures"
-        href: anova_repeated_measures.qmd
-      - text: "Two-way ANOVA (fixed effects)"
-        href: two-way-anova.qmd
-      - text: "Two-way ANOVA (fixed and random effects)"
-        href: two_way_anova_fixed_random.qmd
-      - text: "Two-way ANOVA (random block)"
-        href: two-way-anova-random-block.qmd
+      - section: "ANOVA"
+        contents:
+        - text: "One-way ANOVA"
+          href: oneway_anova.qmd
+        - text: "ANOVA with Repeated Measures"
+          href: anova_repeated_measures.qmd
+        - text: "Two-way ANOVA (fixed effects)"
+          href: two-way-anova.qmd
+        - text: "Two-way ANOVA (fixed and random effects)"
+          href: two_way_anova_fixed_random.qmd
+        - text: "Two-way ANOVA (random block)"
+          href: two-way-anova-random-block.qmd
+
+  navbar:
+      title: "Course 1MRR823"
+      background: "#f6f6f6"
+      search: true
+      pinned: true
+      left:
+        - text: "Home"
+          href: index.qmd
+        - text: "Main site"
+          href: https://sites.google.com/uqac.ca/ecologienumerique/accueil
+        - text: "Moodle"
+          href: https://moodle.uqac.ca/
 
 format:
   html:
