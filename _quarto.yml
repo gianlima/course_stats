@@ -3,50 +3,72 @@ project:
   output-dir: docs
 
 website:
+  repo-url: https://github.com/gianlima/course_stats
+  repo-actions: [edit, source, issue]
+  page-footer: 
+    left: "Copyright 2024, Gian L. Santos" 
+  back-to-top-navigation: true
+  page-navigation: true
+  title: COURSE
+  favicon: /img/fav.svg
   sidebar:
     title: "Course 1MRR823"
     style: "floating"
-    background: "#ffffff"
-    logo: UQAC_Couleur.png
+    background: "#f0f5fa"
     search: false
     contents:
-      - text: "Correlation & Simple Regression"
-        href: correlation.qmd
-      - text: "Other types of correlation"
-        href: non-parametric.qmd
-      - text: "Simple Linear Regression"
-        href: simple_linear_regression.qmd
-      - text: "Multiple Linear Regression"
-        href: mutiple_linear_regression.qmd
-      - section: "ANOVA"
+      - section: "Guide"
         contents:
-        - text: "One-way ANOVA"
-          href: oneway_anova.qmd
-        - text: "ANOVA with Repeated Measures"
-          href: anova_repeated_measures.qmd
-        - text: "Two-way ANOVA (fixed effects)"
-          href: two-way-anova.qmd
-        - text: "Two-way ANOVA (fixed and random effects)"
-          href: two_way_anova_fixed_random.qmd
-        - text: "Two-way ANOVA (random block)"
-          href: two-way-anova-random-block.qmd
+        - section: "Correlation"
+          contents: 
+          - text: "Correlation & Simple Regression"
+            href: correlation.qmd
+          - text: "Other types of correlation"
+            href: non-parametric.qmd
+        - section: "Linear regression"
+          contents: 
+          - text: "Simple Linear Regression"
+            href: simple_linear_regression.qmd
+          - text: "Multiple Linear Regression"
+            href: mutiple_linear_regression.qmd
+        - section: "ANOVA"
+          contents: 
+          - text: "One-way ANOVA"
+            href: oneway_anova.qmd
+          - text: "ANOVA with Repeated Measures"
+            href: anova_repeated_measures.qmd
+          - text: "Two-way ANOVA (fixed effects)"
+            href: two-way-anova.qmd
+          - text: "Two-way ANOVA (fixed and random effects)"
+            href: two_way_anova_fixed_random.qmd
+          - text: "Two-way ANOVA (random block)"
+            href: two-way-anova-random-block.qmd
+        
 
   navbar:
       title: "Course 1MRR823"
-      background: "#f6f6f6"
       search: true
       pinned: true
-      left:
-        - text: "Home"
+      logo: /img/uqac_small.png
+      right:
+        - icon: house-door
+          text: "Home"
           href: index.qmd
-        - text: "Main site"
+        - icon: sign-turn-right
+          text: "Main site"
           href: https://sites.google.com/uqac.ca/ecologienumerique/accueil
-        - text: "Moodle"
+          target: -blank
+        - icon: journal-check
+          text: "Moodle"
           href: https://moodle.uqac.ca/
+          target: -blank
+
 
 format:
   html:
-    theme: morph
+    theme: 
+    - morph
+    - custom.scss
     css: styles.css
     toc: true
 

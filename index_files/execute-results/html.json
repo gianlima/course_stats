@@ -1,0 +1,14 @@
+{
+  "hash": "0f3cadb66b636223d69519014206efbd",
+  "result": {
+    "markdown": "---\ntitle: \"1MRR823 - Analyses quantitatives dans le domaine des ressources renouvelables\"\n---\n\n\n::: {.callout-note appearance=\"minimal\" icon=\"false\"}\n### Welcome to the resource hub for the course 1MRR823! Here, you'll find a collection of R code snippets designed to enhance your learning experience. These codes are tailored to support the concepts covered in class and help you apply your knowledge effectively. Dive in and explore!\n:::\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n[1] 2\n```\n:::\n:::\n\n\n# big \n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

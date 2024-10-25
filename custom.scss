@@ -1,0 +1,41 @@
+/*-- scss:defaults --*/
+  // quarto-scss-analysis-annotation { "origin": "morph (builtin theme)" }
+
+$theme: "morph" !default;
+
+//
+  // Color system
+//
+  
+  $white:    #f0f5fa !default;
+  $gray-100: #f0f5fa !default;
+  $gray-200: #f0f5fa !default;
+  $gray-300: #dee2e6 !default;
+  $gray-400: #0047AB !default;
+  $gray-500: #adb5bd !default;
+  $gray-600: #7f8a99 !default;
+  $gray-700: #0047AB !default;
+  $gray-800: #444b40 !default;
+  $gray-900: #212529 !default;
+  $black:    #000 !default;
+  
+  $blue:    #378dfc !default;
+  $indigo:  #6610f2 !default;
+  $purple:  #0047AB !default;
+  $pink:    #d63384 !default;
+  $red:     #e52527 !default;
+  $orange:  #fd7e14 !default;
+  $yellow:  #ffc107 !default;
+  $green:   #43cc29 !default;
+  $teal:    #20c997 !default;
+  $cyan:    #0dcaf0 !default;
+  
+  
+  
+// Body
+
+$body-bg:                   $gray-100 !default;
+$body-color:                $black !default;
+
+
+
